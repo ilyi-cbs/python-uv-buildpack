@@ -664,12 +664,8 @@ func (s *Supplier) RunPipUnvendored() error {
 	}
 
 	if err := s.runPipInstall(
-		"-r", requirementsPath,
-		"--ignore-installed",
-		"--exists-action=w",
-		"--src="+filepath.Join(s.Stager.DepDir(), "src"),
-		"--disable-pip-version-check",
-		"--no-warn-script-location",
+		"-r", requirementsPath
+		"--src="+filepath.Join(s.Stager.DepDir(), "src")
 	); err != nil {
 		return fmt.Errorf("could not run pip: %v", err)
 	}
@@ -882,6 +878,7 @@ func (s *Supplier) shouldRunPip() (bool, string, error) {
 
 	return true, requirementsPath, nil
 }
+
 
 func pipCommand() []string {
 	if os.Getenv(EnvPipVersion) != "" {
