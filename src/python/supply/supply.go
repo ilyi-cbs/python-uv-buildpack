@@ -102,6 +102,11 @@ func RunPython(s *Supplier) error {
 		return err
 	}
 
+	if err := s.InstallUV(); err != nil {
+		s.Log.Error("Could not install uv: %v", err)
+		return err
+	}
+
 	if err := s.InstallPip(); err != nil {
 		s.Log.Error("Could not install pip: %v", err)
 		return err
@@ -867,11 +872,20 @@ func (s *Supplier) shouldRunPip() (bool, string, error) {
 	return true, requirementsPath, nil
 }
 
+func installUV() []string {
+	// Install uv via "python -m pip install uv" if pip version is unknown, otherwise use "uv pip" if pip version is 23.1 or higher
+	if os.Getenv(EnvPipVersion) != "" {
+		return []string{"uv", "pip", "--no-cache-dir"}
+	}
+	return []string{"python", "-m", "pip", "install", "uv", "--no-cache-dir"}
+
+}
+
 func pipCommand() []string {
 	if os.Getenv(EnvPipVersion) != "" {
-		return []string{"pip"}
+		return []string{"uv", "pip"}
 	}
-	return []string{"python", "-m", "pip"}
+	return []string{"python", "-m", "uv", "pip"}
 }
 
 func (s *Supplier) runPipInstall(args ...string) error {
