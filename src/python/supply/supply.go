@@ -872,7 +872,7 @@ func (s *Supplier) shouldRunPip() (bool, string, error) {
 	return true, requirementsPath, nil
 }
 
-func installUV() []string {
+func InstallUV() []string {
 	// Install uv via "python -m pip install uv" if pip version is unknown, otherwise use "uv pip" if pip version is 23.1 or higher
 	if os.Getenv(EnvPipVersion) != "" {
 		return []string{"uv", "pip", "--no-cache-dir"}
