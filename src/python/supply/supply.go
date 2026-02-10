@@ -664,8 +664,9 @@ func (s *Supplier) RunPipUnvendored() error {
 	}
 
 	if err := s.runPipInstall(
-		"-r", requirementsPath
-		"--src="+filepath.Join(s.Stager.DepDir(), "src")
+		"-r", requirementsPath,
+		"--src="+filepath.Join(s.Stager.DepDir(), "src"),
+
 	); err != nil {
 		return fmt.Errorf("could not run pip: %v", err)
 	}
