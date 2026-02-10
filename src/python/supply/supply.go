@@ -345,7 +345,7 @@ func (s *Supplier) InstallPip() error {
 	if pipVersion == "" {
 		s.Log.Info("Using python's pip module")
 
-		versionCmd := append("pip", "--version")
+		versionCmd := append([]string{"python", "-m", "pip"}, "--version")
 		return s.Command.Execute(s.Stager.BuildDir(), indentWriter(os.Stdout), indentWriter(os.Stderr), versionCmd[0], versionCmd[1:]...)
 	}
 	if pipVersion != "latest" {
