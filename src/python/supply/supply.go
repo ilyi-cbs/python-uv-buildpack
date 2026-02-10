@@ -21,6 +21,7 @@ import (
 )
 
 const EnvPipVersion = "BP_PIP_VERSION"
+const envUVersion = "BP_UV_VERSION"
 
 type Stager interface {
 	BuildDir() string
@@ -327,6 +328,17 @@ func (s *Supplier) RewriteShebangs() error {
 		}
 	}
 	return nil
+}
+
+func (s *Supplier) InstallUV() error {
+	// Install uv via "python -m pip install uv" if pip version is unknown, otherwise use "uv pip" if pip version is 23.1 or higher
+
+
+	if os.Getenv(EnvPipVersion) != "" {
+		return []string{"pip", "install", "uv", "--no-cache-dir"}
+	}
+	return []string{"python", "-m", "pip", "install", "uv", "--no-cache-dir"}
+
 }
 
 func (s *Supplier) InstallPip() error {
@@ -870,15 +882,6 @@ func (s *Supplier) shouldRunPip() (bool, string, error) {
 	}
 
 	return true, requirementsPath, nil
-}
-
-func InstallUV() []string {
-	// Install uv via "python -m pip install uv" if pip version is unknown, otherwise use "uv pip" if pip version is 23.1 or higher
-	if os.Getenv(EnvPipVersion) != "" {
-		return []string{"uv", "pip", "--no-cache-dir"}
-	}
-	return []string{"python", "-m", "pip", "install", "uv", "--no-cache-dir"}
-
 }
 
 func pipCommand() []string {
