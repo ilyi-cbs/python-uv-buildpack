@@ -334,11 +334,14 @@ func (s *Supplier) InstallUV() error {
 	// Install uv via "python -m pip install uv" if pip version is unknown, otherwise use "uv pip" if pip version is 23.1 or higher
 
 
-	if os.Getenv(EnvPipVersion) != "" {
-		return []string{"pip", "install", "uv", "--no-cache-dir"}
+	// if os.Getenv(EnvPipVersion) != "" {
+	// 	return []string{"pip", "install", "uv", "--no-cache-dir"}
+	// }
+	// return []string{"python", "-m", "pip", "install", "uv", "--no-cache-dir"}
+	if err:= s.Command.Execute(s.Stager.BuildDir(), indentWriter(os.Stdout), indentWriter(os.Stderr), "python", "-m", "pip", "install", "uv", "--no-cache-dir"); err != nil {
+		return err
 	}
-	return []string{"python", "-m", "pip", "install", "uv", "--no-cache-dir"}
-
+	return nil
 }
 
 func (s *Supplier) InstallPip() error {
