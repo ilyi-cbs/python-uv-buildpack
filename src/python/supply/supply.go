@@ -331,16 +331,12 @@ func (s *Supplier) RewriteShebangs() error {
 }
 
 func (s *Supplier) InstallUV() error {
-	// Install uv via "python -m pip install uv" if pip version is unknown, otherwise use "uv pip" if pip version is 23.1 or higher
-
-
-	// if os.Getenv(EnvPipVersion) != "" {
-	// 	return []string{"pip", "install", "uv", "--no-cache-dir"}
-	// }
-	// return []string{"python", "-m", "pip", "install", "uv", "--no-cache-dir"}
+	// Install uv via "python -m pip install uv"
+	s.Log.Info("Installing uv...")
 	if err:= s.Command.Execute(s.Stager.BuildDir(), indentWriter(os.Stdout), indentWriter(os.Stderr), "python", "-m", "pip", "install", "uv", "--no-cache-dir"); err != nil {
 		return err
 	}
+	s.Log.Info("[CUSTOM] Successfully installed uv")
 	return nil
 }
 
@@ -349,7 +345,7 @@ func (s *Supplier) InstallPip() error {
 	if pipVersion == "" {
 		s.Log.Info("Using python's pip module")
 
-		versionCmd := append(pipCommand(), "--version")
+		versionCmd := append("pip", "--version")
 		return s.Command.Execute(s.Stager.BuildDir(), indentWriter(os.Stdout), indentWriter(os.Stderr), versionCmd[0], versionCmd[1:]...)
 	}
 	if pipVersion != "latest" {
